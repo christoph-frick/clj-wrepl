@@ -28,9 +28,9 @@
   [["-c" "--config config.edn" "Read the integrant system config from this file and merge it with the default"
     :validate [file-exists? "File must exist"]]
    [nil "--no-user-config" (str "Don't load the default user config from $HOME/" wrepl.config/default-config-filename)]
-   ; TODO ["-i" "--init script.clj" "Run the given file before the first prompt"
-   ;  :validate [file-exists? "File must exist"]]
-   ; TODO ["-e" "--eval string" "Evaluate the expression (after --init if both given)"]
+   ["-i" "--init script.clj" "Run the given file before the first prompt"
+    :validate [file-exists? "File must exist"]]
+   ["-e" "--eval string" "Evaluate the expression (after --init if both given)"]
    ["-h" "--help"]])
 
 (defn- merge-config
@@ -39,6 +39,12 @@
     (merge a b)
     a))
 
+(defn- add-init
+  [config key cfg]
+  (-> config
+      (assoc key cfg)
+      (update :wrepl/init (fnil conj []) (ig/ref key))))
+
 (defn -main
   [& args]
   (let [{:keys [options arguments errors summary] :as opts} (cli/parse-opts args cli-options)]
@@ -46,11 +52,18 @@
       (:help options) (exit 0 (usage summary))
       errors (exit 1 (error-message (usage summary) errors)))
     (let [config (cond-> wrepl.config/default-config
+                   ; load default user config unless prohibited
                    (not (contains? options :no-user-config))
                    (merge-config (wrepl.config/load-user-config))
-                   ;
+                   ; load commandline provided config file
                    (contains? options :config)
-                   (merge-config (wrepl.config/load-config-by-name (:config options))))
+                   (merge-config (wrepl.config/load-config-by-name (:config options)))
+                   ; load-file user script
+                   (contains? options :init)
+                   (add-init :wrepl.init/load-file {:filename (:init options)})
+                   ; eval user string
+                   (contains? options :eval)
+                   (add-init :wrepl.init/eval {:expr (:eval options)}))
           _ (ig/load-namespaces config)
           system (ig/init config)]
       (wrepl.repl/repl system))))
