@@ -4,16 +4,23 @@
 
 ; TODO: put the specs somewhere sane -- or decide agsinst using them at all and go with some simple checks instead
 
-(spec/def :wrepl/init fn?)
+(spec/def :wrepl/init (spec/coll-of fn?))
 
 (spec/def :wrepl/print fn?)
 
+(spec/def :wrepl/prompt fn?)
+
 (spec/def :wrepl/system
-  (spec/keys :req [:wrepl/init :wrepl/print]))
+  (spec/keys :opt [:wrepl/init :wrepl/print :wrepl/prompt]))
+
+
+(defn repl-params
+  [system]
+  (let [supported [:wrepl/init :wrepl/print :wrepl/prompt]]
+    (into [] (mapcat (fn [[k v]] [(keyword (name k)) v])) (select-keys system supported))))
 
 
 (defn repl
-  [{:wrepl/keys [init print] :as system}]
+  [system]
   (spec/assert :wrepl/system system) ; TODO: does not fail right now
-  (apply clojure.main/repl [:init init
-                            :print print]))
+  (apply clojure.main/repl (repl-params system)))
