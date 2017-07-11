@@ -39,12 +39,6 @@
     (merge a b)
     a))
 
-(defn- add-init
-  [config key cfg]
-  (-> config
-      (assoc key cfg)
-      (update :wrepl/init (fnil conj []) (ig/ref key))))
-
 (defn -main
   [& args]
   (let [{:keys [options arguments errors summary] :as opts} (cli/parse-opts args cli-options)]
@@ -60,10 +54,10 @@
                    (merge-config (wrepl.config/load-config-by-name (:config options)))
                    ; load-file user script
                    (contains? options :init)
-                   (add-init :wrepl.init/load-file {:filename (:init options)})
+                   (wrepl.config/append-init :wrepl.init/load-file {:filename (:init options)})
                    ; eval user string
                    (contains? options :eval)
-                   (add-init :wrepl.init/eval {:expr (:eval options)}))
+                   (wrepl.config/append-init :wrepl.init/eval {:expr (:eval options)}))
           _ (ig/load-namespaces config)
           system (ig/init config)]
       (wrepl.repl/repl system))))

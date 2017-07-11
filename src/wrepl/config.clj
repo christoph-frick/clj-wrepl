@@ -30,6 +30,13 @@
      (load-config (io/file $HOME filename)))))
 
 
+(defn append-init
+  [config key cfg]
+  (-> config
+      (assoc key cfg)
+      (update :wrepl/init (fnil conj []) (ig/ref key))))
+
+
 (defmethod ig/init-key :wrepl/init [_ fs]
   (fn init []
     (doseq [f fs] (f))))
