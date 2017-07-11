@@ -1,10 +1,10 @@
 (ns wrepl.main
-  (:require [integrant.core :as ig]
-            [clojure.java.io :as io]
+  (:require [clojure.java.io :as io]
             [clojure.tools.cli :as cli]
             [clojure.string :as str]
             [wrepl.repl]
-            [wrepl.config])
+            [wrepl.config]
+            [wrepl.system])
   (:gen-class))
 
 (defn- file-exists?
@@ -58,6 +58,5 @@
                    ; eval user string
                    (contains? options :eval)
                    (wrepl.config/append-init :wrepl.init/eval {:expr (:eval options)}))
-          _ (ig/load-namespaces config)
-          system (ig/init config)]
+          system (wrepl.system/build-system config)]
       (wrepl.repl/repl system))))
