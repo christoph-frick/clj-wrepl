@@ -1,9 +1,9 @@
-THIS **EXPERIMENTAL**!  THE DOCS ARE NOT COMPLETE!
+THIS IS **EXPERIMENTAL**!  THE DOCS ARE NOT COMPLETE!
 
 # WREPL
 
-Starting the *Clojure REPL* in a customizable fashion.  The goal is here to
-make it easer to write "prepped" REPLs.
+Starting the *Clojure REPL* in a customizable fashion.  The goal is to make it
+easer to write "prepped" REPLs.
 
 
 ## Known plugins
