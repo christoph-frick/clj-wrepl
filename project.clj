@@ -1,5 +1,5 @@
-(defproject wrepl "0.1.0-SNAPSHOT"
-  :dependencies [[org.clojure/clojure "1.9.0-beta1"]
+(defproject net.ofnir/wrepl "0.1.0-SNAPSHOT"
+  :dependencies [[org.clojure/clojure "1.9.0-beta4"]
                  [integrant "0.6.1"]
                  [org.clojure/tools.cli "0.3.5"]]
   :main wrepl.main
