@@ -3,8 +3,9 @@
             [clojure.java.io :as io]))
 
 (def ^:const default-config
-  {:wrepl/init [(ig/ref :wrepl.init/in-ns)]
-   :wrepl.init/in-ns {:ns 'user}})
+  {:wrepl/init [(ig/ref :wrepl.init/in-ns) (ig/ref :wrepl/append-init)]
+   :wrepl.init/in-ns {:ns 'user}
+   [:wrepl/append-init :wrepl/init] []})
 
 
 (defn load-config
