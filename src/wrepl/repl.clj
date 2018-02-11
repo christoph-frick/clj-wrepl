@@ -10,13 +10,15 @@
 
 (spec/def :wrepl/prompt fn?)
 
+(spec/def :wrepl/read fn?)
+
 (spec/def :wrepl/system
-  (spec/keys :opt [:wrepl/init :wrepl/print :wrepl/prompt]))
+  (spec/keys :opt [:wrepl/init :wrepl/print :wrepl/prompt :wrepl/read]))
 
 
 (defn repl-params
   [system]
-  (let [supported [:wrepl/init :wrepl/print :wrepl/prompt]]
+  (let [supported [:wrepl/init :wrepl/print :wrepl/prompt :wrepl/read]]
     (into [] (mapcat (fn [[k v]] [(keyword (name k)) v])) (select-keys system supported))))
 
 

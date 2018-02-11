@@ -43,3 +43,4 @@
     (doseq [f fs] (f))))
 (defmethod ig/init-key :wrepl/print [_ f] f)
 (defmethod ig/init-key :wrepl/prompt [_ f] f)
+(defmethod ig/init-key :wrepl/read [_ f] f)

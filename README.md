@@ -15,3 +15,7 @@ easer to write "prepped" REPLs.
 ### Print
 
 - [clj-wrepl-puget](https://github.com/christoph-frick/clj-wrepl-puget) Color pretty print
+
+### Read
+
+- [clj-wrepl-rebel-readline](https://github.com/christoph-frick/clj-wrepl-rebel-readline) Rebel Readline
