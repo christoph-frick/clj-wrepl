@@ -2,6 +2,7 @@
   (:require [integrant.core :as ig]
             [clojure.java.io :as io]))
 
+
 (def ^:const default-config
   {:wrepl/init [(ig/ref :wrepl.init/in-ns) (ig/ref :wrepl/append-init)]
    :wrepl.init/in-ns {:ns 'user}
@@ -38,6 +39,7 @@
       (update :wrepl/init (fnil conj []) (ig/ref key))))
 
 
+(defmethod ig/init-key :wrepl/repl [_ f] f)
 (defmethod ig/init-key :wrepl/init [_ fs]
   (fn init []
     (doseq [f fs] (f))))

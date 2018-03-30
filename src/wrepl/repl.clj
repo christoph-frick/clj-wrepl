@@ -13,7 +13,7 @@
 (spec/def :wrepl/read fn?)
 
 (spec/def :wrepl/system
-  (spec/keys :opt [:wrepl/init :wrepl/print :wrepl/prompt :wrepl/read]))
+  (spec/keys :opt [:wrepl/repl :wrepl/init :wrepl/print :wrepl/prompt :wrepl/read]))
 
 
 (defn repl-params
@@ -25,4 +25,4 @@
 (defn repl
   [system]
   (spec/assert :wrepl/system system) ; TODO: does not fail right now
-  (apply clojure.main/repl (repl-params system)))
+  (apply (or (:wrepl/repl system) clojure.main/repl) (repl-params system)))
