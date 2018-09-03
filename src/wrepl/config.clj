@@ -21,12 +21,12 @@
   (load-config (io/file filename)))
 
 
-(def ^:const default-config-filename ".wrepl.edn")
+(def ^:dynamic *default-config-filename* ".wrepl.edn")
 
 
 (defn load-user-config
   ([]
-   (load-user-config default-config-filename))
+   (load-user-config *default-config-filename*))
   ([filename]
    (when-let [$HOME (System/getProperty "user.home")]
      (load-config (io/file $HOME filename)))))
