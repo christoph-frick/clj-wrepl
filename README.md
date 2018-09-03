@@ -11,6 +11,7 @@ easer to write "prepped" REPLs.
 ### Init
 
 - [clj-wrepl-pomegranate](https://github.com/christoph-frick/clj-wrepl-pomegranate) Load dependencies
+- [clj-wrepl-relative-clj-http](https://github.com/christoph-frick/clj-wrepl-relative-clj-http) Exploring web APIs interactively
 
 ### Print
 
