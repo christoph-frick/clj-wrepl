@@ -18,7 +18,7 @@
 
 (defn repl-params
   [system]
-  (let [supported [:wrepl/init :wrepl/print :wrepl/prompt :wrepl/read]]
+  (let [supported [:wrepl/init :wrepl/print :wrepl/prompt :wrepl/read :wrepl/eval]]
     (into [] (mapcat (fn [[k v]] [(keyword (name k)) v])) (select-keys system supported))))
 
 

@@ -6,6 +6,8 @@
 (def ^:const default-config
   {:wrepl/init [(ig/ref :wrepl.init/in-ns) (ig/ref :wrepl/append-init)]
    :wrepl.init/in-ns {:ns 'user}
+   :wrepl/eval (ig/ref :wrepl.eval/interruptible)
+   :wrepl.eval/interruptible {}
    [:wrepl/append-init :wrepl/init] []})
 
 
@@ -46,3 +48,4 @@
 (defmethod ig/init-key :wrepl/print [_ f] f)
 (defmethod ig/init-key :wrepl/prompt [_ f] f)
 (defmethod ig/init-key :wrepl/read [_ f] f)
+(defmethod ig/init-key :wrepl/eval [_ f] f)
