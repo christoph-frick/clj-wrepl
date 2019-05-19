@@ -27,7 +27,7 @@
 (def ^:const cli-options
   [["-c" "--config config.edn" "Read the integrant system config from this file and merge it with the default"
     :validate [file-exists? "File must exist"]]
-   [nil "--no-user-config" (str "Don't load the default user config from $HOME/" wrepl.config/*default-config-filename*)]
+   [nil "--no-user-config" (str "Don't load the default user config")]
    ["-i" "--init script.clj" "Run the given file before the first prompt"
     :validate [file-exists? "File must exist"]]
    ["-e" "--eval string" "Evaluate the expression (after --init if both given)"]
@@ -51,7 +51,7 @@
                    (merge-config (wrepl.config/load-user-config))
                    ; load commandline provided config file
                    (contains? options :config)
-                   (merge-config (wrepl.config/load-config-by-name (:config options)))
+                   (merge-config (wrepl.config/load-config :file (:config options)))
                    ; load-file user script
                    (contains? options :init)
                    (wrepl.config/append-init :wrepl.init/load-file {:filename (:init options)})

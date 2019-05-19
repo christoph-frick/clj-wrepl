@@ -1,6 +1,7 @@
 (ns wrepl.config
   (:require [integrant.core :as ig]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [clojure.string :as str]))
 
 
 (def ^:const default-config
@@ -11,27 +12,53 @@
    [:wrepl/append-init :wrepl/init] []})
 
 
+(defmulti load-resource (fn [type _] type))
+
+(defmethod load-resource :file 
+  [_ source]
+  (io/file source))
+
+(defmethod load-resource :resource
+  [_ source]
+  (io/resource source))
+
+
 (defn load-config
-  [file]
-  (-> file
+  [type resource]
+  (-> (load-resource type resource)
       (slurp)
       (ig/read-string)))
 
 
-(defn load-config-by-name
-  [filename]
-  (load-config (io/file filename)))
+(def ^:dynamic *default-base-name* "wrepl")
 
 
-(def ^:dynamic *default-config-filename* ".wrepl.edn")
+(def ^:dynamic *default-config-locations* {".$BASENAME.edn" :file
+                                           ".wrepl/$BASENAME.edn" :file
+                                           "$HOME/.$BASENAME.edn" :file
+                                           "$HOME/.wrepl/$BASENAME.edn" :file
+                                           "$BASENAME.edn" :resource})
 
 
 (defn load-user-config
   ([]
-   (load-user-config *default-config-filename*))
-  ([filename]
-   (when-let [$HOME (System/getProperty "user.home")]
-     (load-config (io/file $HOME filename)))))
+   (load-user-config *default-base-name* *default-config-locations*))
+  ([base-name locations]
+   (let [replacements {"$HOME" (System/getProperty "user.home")
+                       "$BASENAME" base-name}
+         replace-fn (fn [s] (reduce-kv str/replace s replacements))
+         load-fn (fn [source type] (let [source (replace-fn source)
+                                         name (str (name type) "://" source)]
+                                     (try
+                                       (let [config (load-config type source)]
+                                         (println "User config from" name)
+                                         config)
+                                       (catch Exception e
+                                         #_(println "No config at" name ":" (.getMessage e))))))]
+     (loop [[[source type] & rest] locations]
+       (if-let [config (load-fn source type)]
+         config
+         (recur rest))))))
 
 
 (defn append-init
