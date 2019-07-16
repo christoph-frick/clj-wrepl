@@ -1,12 +1,13 @@
 (ns wrepl.init
-  (:require [integrant.core :as ig]))
+  (:require [integrant.core :as ig]
+            [clojure.main]))
 
 
 (defmethod ig/init-key :wrepl.init/in-ns [_ {ns :ns :as opts}]
   (fn wrepl-init []
     (in-ns ns)
     (clojure.core/use 'clojure.core)
-    (use 'clojure.repl)
+    (apply require clojure.main/repl-requires)
     ns))
 
 
