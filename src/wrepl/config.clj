@@ -5,8 +5,8 @@
 
 
 (def ^:const default-config
-  {:wrepl/init [(ig/ref :wrepl.init/in-ns) (ig/ref :wrepl/append-init)]
-   :wrepl.init/in-ns {:ns 'user}
+  {:wrepl/init [(ig/ref :in-ns/user) (ig/ref :wrepl/append-init)]
+   [:in-ns/user :wrepl.init/in-ns] {:ns 'user}
    :wrepl/eval (ig/ref :wrepl.eval/interruptible)
    :wrepl.eval/interruptible {}
    [:wrepl/append-init :wrepl/init] []})
