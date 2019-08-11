@@ -54,9 +54,9 @@
                    (merge-config (wrepl.config/load-config :file (:config options)))
                    ; load-file user script
                    (contains? options :init)
-                   (wrepl.config/append-init :wrepl.init/load-file {:filename (:init options)})
+                   (wrepl.config/append-init [:wrepl.main/load-file :wrepl.init/load-file] {:filename (:init options)})
                    ; eval user string
                    (contains? options :eval)
-                   (wrepl.config/append-init :wrepl.init/eval {:expr (:eval options)}))
+                   (wrepl.config/append-init [:wrepl.main/eval :wrepl.init/eval] {:expr (:eval options)}))
           system (wrepl.system/build-system config)]
       (wrepl.repl/repl system))))
