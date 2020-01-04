@@ -30,10 +30,10 @@
       (ig/read-string)))
 
 
-(def ^:dynamic *default-base-name* "wrepl")
+(def ^:dynamic *base-name* "wrepl")
 
 
-(def ^:dynamic *default-config-locations* {".$BASENAME.edn" :file
+(def ^:dynamic *config-locations* {".$BASENAME.edn" :file
                                            ".wrepl/$BASENAME.edn" :file
                                            "$HOME/.$BASENAME.edn" :file
                                            "$HOME/.wrepl/$BASENAME.edn" :file
@@ -42,7 +42,7 @@
 
 (defn load-user-config
   ([]
-   (load-user-config *default-base-name* *default-config-locations*))
+   (load-user-config *base-name* *config-locations*))
   ([base-name locations]
    (let [replacements {"$HOME" (System/getProperty "user.home")
                        "$BASENAME" base-name}
