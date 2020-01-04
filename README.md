@@ -4,7 +4,7 @@ Starting the *Clojure REPL* in a customizable fashion.  The goal is to make it
 easer to write "prepped" REPLs.
 
 
-# Build
+## Build
 
 Build an *uberjar*
 
@@ -12,7 +12,7 @@ Build an *uberjar*
 lein uberjar
 ```
 
-# Run
+## Run
 
 ```shell
 % alias clj="java -jar target/wrepl-0.1.0-SNAPSHOT-standalone.jar"
@@ -52,16 +52,8 @@ rebel-readline and puget can look like this (e.g. in
 
 ## Known plugins
 
-### Init
-
 - [clj-wrepl-relative-clj-http](https://github.com/christoph-frick/clj-wrepl-relative-clj-http) Exploring web APIs interactively
-
-### Print
-
 - [clj-wrepl-puget](https://github.com/christoph-frick/clj-wrepl-puget) Color pretty print
-
-### Read
-
 - [clj-wrepl-rebel-readline](https://github.com/christoph-frick/clj-wrepl-rebel-readline) Rebel Readline
 
 ### Deprecated
