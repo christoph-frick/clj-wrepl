@@ -66,4 +66,4 @@ rebel-readline and puget can look like this (e.g. in
 
 ### Deprecated
 
-- Moved into the core itself; use `:wrepl/deps` instead ~~[clj-wrepl-pomegranate](https://github.com/christoph-frick/clj-wrepl-pomegranate) Load dependencies~~
+- ~~[clj-wrepl-pomegranate](https://github.com/christoph-frick/clj-wrepl-pomegranate) Load dependencies~~ Moved into the core itself; use `:wrepl/deps` instead 
