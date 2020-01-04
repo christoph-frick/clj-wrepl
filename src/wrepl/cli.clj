@@ -25,7 +25,8 @@
   (System/exit exit-code))
 
 (def ^:const cli-options
-  [["-c" "--config config.edn" "Read the integrant system config from this file and merge it with the default"
+  [["-b" "--base-name base-name" "Base name for the user config to search for; e.g. $HOME/.wrepl/$BASENAME.edn (default: wrepl)"]
+   ["-c" "--config config.edn" "Read the integrant system config from this file and merge it with the default"
     :validate [file-exists? "File must exist"]]
    [nil "--no-user-config" (str "Don't load the default user config")]
    ["-i" "--init script.clj" "Run the given file before the first prompt"
@@ -48,18 +49,20 @@
     ; change to a DynamicClassLoader like the REPL does, or else pomegranate will not be able to find a modifiable CL
     (let [cl (.getContextClassLoader (Thread/currentThread))]
       (.setContextClassLoader (Thread/currentThread) (DynamicClassLoader. cl)))
-    (let [config (cond-> wrepl.config/default-config
-                   ; load default user config unless prohibited
-                   (not (contains? options :no-user-config))
-                   (merge-config (wrepl.config/load-user-config))
-                   ; load commandline provided config file
-                   (contains? options :config)
-                   (merge-config (wrepl.config/load-config :file (:config options)))
-                   ; load-file user script
-                   (contains? options :init)
-                   (wrepl.config/append-init [:wrepl.main/load-file :wrepl.init/load-file] {:filename (:init options)})
-                   ; eval user string
-                   (contains? options :eval)
-                   (wrepl.config/append-init [:wrepl.main/eval :wrepl.init/eval] {:expr (:eval options)}))
-          system (wrepl.system/build-system config)]
-      (wrepl.repl/repl system))))
+    (let [base-name (or (:base-name options) wrepl.config/*base-name*)]
+      (binding [wrepl.config/*base-name* base-name]
+        (let [config (cond-> wrepl.config/default-config
+                       ; load default user config unless prohibited
+                       (not (contains? options :no-user-config))
+                       (merge-config (wrepl.config/load-user-config))
+                       ; load commandline provided config file
+                       (contains? options :config)
+                       (merge-config (wrepl.config/load-config :file (:config options)))
+                       ; load-file user script
+                       (contains? options :init)
+                       (wrepl.config/append-init [:wrepl.main/load-file :wrepl.init/load-file] {:filename (:init options)})
+                       ; eval user string
+                       (contains? options :eval)
+                       (wrepl.config/append-init [:wrepl.main/eval :wrepl.init/eval] {:expr (:eval options)}))
+              system (wrepl.system/build-system config)]
+          (wrepl.repl/repl system))))))
