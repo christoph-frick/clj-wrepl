@@ -10,7 +10,6 @@ easer to write "prepped" REPLs.
 
 ### Init
 
-- [clj-wrepl-pomegranate](https://github.com/christoph-frick/clj-wrepl-pomegranate) Load dependencies
 - [clj-wrepl-relative-clj-http](https://github.com/christoph-frick/clj-wrepl-relative-clj-http) Exploring web APIs interactively
 
 ### Print
@@ -20,3 +19,7 @@ easer to write "prepped" REPLs.
 ### Read
 
 - [clj-wrepl-rebel-readline](https://github.com/christoph-frick/clj-wrepl-rebel-readline) Rebel Readline
+
+### Deprecated
+
+- Moved into the core itself; use `:wrepl/deps` instead ~~[clj-wrepl-pomegranate](https://github.com/christoph-frick/clj-wrepl-pomegranate) Load dependencies~~
