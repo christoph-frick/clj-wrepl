@@ -5,4 +5,9 @@
                  [org.slf4j/slf4j-simple "1.7.29"]
                  [org.clojure/tools.cli "0.4.2"]]
   :main wrepl.main
-  :aot [wrepl.main])
+  :aot [wrepl.main]
+  :release-tasks [["vcs" "assert-committed"]
+                  ["change" "version"
+                   "leiningen.release/bump-version" "release"]
+                  ["vcs" "commit"]
+                  ["vcs" "tag"]])
