@@ -1,7 +1,7 @@
 # WREPL
 
-Starting the *Clojure REPL* in a customizable fashion.  The goal is to make it
-easer to write "prepped" REPLs.
+Starting the *Clojure REPL* in a customizable fashion.  The goal is to
+make it easer to write "prepped" REPLs.
 
 
 ## Build
@@ -15,8 +15,8 @@ lein uberjar
 ## Run
 
 ```shell
-% alias clj="java -jar target/wrepl-0.1.0-SNAPSHOT-standalone.jar"
-% clj --help
+% alias wrepl="java -jar target/wrepl-*-standalone.jar"
+% wrepl --help
 WREPL
 
 wrepl [options...]
@@ -52,10 +52,7 @@ rebel-readline and puget can look like this (e.g. in
 
 ## Known plugins
 
-- [clj-wrepl-relative-clj-http](https://github.com/christoph-frick/clj-wrepl-relative-clj-http) Exploring web APIs interactively
+- [clj-wrepl-pomegranate](https://github.com/christoph-frick/clj-wrepl-pomegranate) Load dependencies
 - [clj-wrepl-puget](https://github.com/christoph-frick/clj-wrepl-puget) Color pretty print
 - [clj-wrepl-rebel-readline](https://github.com/christoph-frick/clj-wrepl-rebel-readline) Rebel Readline
-
-### Deprecated
-
-- ~~[clj-wrepl-pomegranate](https://github.com/christoph-frick/clj-wrepl-pomegranate) Load dependencies~~ Moved into the core itself; use `:wrepl/deps` instead 
+- [clj-wrepl-relative-clj-http](https://github.com/christoph-frick/clj-wrepl-relative-clj-http) Exploring web APIs interactively
