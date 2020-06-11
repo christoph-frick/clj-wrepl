@@ -1,7 +1,8 @@
 (ns wrepl.config
   (:require [integrant.core :as ig]
             [clojure.java.io :as io]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [wrepl.replacement :as r]))
 
 
 (def ^:const default-config
@@ -44,10 +45,9 @@
   ([]
    (load-user-config *base-name* *config-locations*))
   ([base-name locations]
-   (let [replacements {"$HOME" (System/getProperty "user.home")
-                       "$BASENAME" base-name}
-         replace-fn (fn [s] (reduce-kv str/replace s replacements))
-         load-fn (fn [source type] (let [source (replace-fn source)
+   (let [replacements  (assoc r/default-path-replacements
+                              "$BASENAME" base-name)
+         load-fn (fn [source type] (let [source (r/replace-all replacements source)
                                          name (str (name type) "://" source)]
                                      (try
                                        (let [config (load-config type source)]
