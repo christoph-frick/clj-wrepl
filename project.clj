@@ -3,7 +3,7 @@
                  [integrant "0.8.0"]
                  [com.cemerick/pomegranate "1.1.0"]
                  [org.slf4j/slf4j-simple "1.7.30"]
-                 [org.clojure/tools.cli "0.4.2"]]
+                 [org.clojure/tools.cli "1.0.194"]]
   :main wrepl.main
   :aot [wrepl.main]
   :release-tasks [["vcs" "assert-committed"]
