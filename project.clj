@@ -1,4 +1,4 @@
-(defproject net.ofnir/wrepl "0.1.4"
+(defproject net.ofnir/wrepl "0.1.5-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [integrant "0.8.0"]
                  [clj-commons/pomegranate "1.2.1"]
