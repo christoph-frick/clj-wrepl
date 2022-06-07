@@ -1,5 +1,5 @@
 (defproject net.ofnir/wrepl "0.1.4-SNAPSHOT"
-  :dependencies [[org.clojure/clojure "1.10.3"]
+  :dependencies [[org.clojure/clojure "1.11.1"]
                  [integrant "0.8.0"]
                  [com.cemerick/pomegranate "1.1.0"]
                  [org.slf4j/slf4j-simple "1.7.36"]
