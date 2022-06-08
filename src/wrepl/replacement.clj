@@ -7,4 +7,5 @@
 (defn replace-all
   "Replaces all keys with their value inside the string"
   [kvs s]
-  (reduce-kv str/replace s kvs))
+  (when s
+    (reduce-kv str/replace s (update-vals kvs #(or % "")))))
