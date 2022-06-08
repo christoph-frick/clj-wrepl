@@ -15,7 +15,7 @@
 
 (defmulti load-resource (fn [type _] type))
 
-(defmethod load-resource :file 
+(defmethod load-resource :file
   [_ source]
   (io/file source))
 
@@ -47,18 +47,21 @@
   ([base-name locations]
    (let [replacements  (assoc r/default-path-replacements
                               "$BASENAME" base-name)
-         load-fn (fn [source type] (let [source (r/replace-all replacements source)
-                                         name (str (name type) "://" source)]
+         load-fn (fn [source type] (let [source (r/replace-all replacements source)]
                                      (try
                                        (let [config (load-config type source)]
-                                         (println "User config from" name)
+                                         (println "User config from" (str (name type) "://" source))
                                          config)
                                        (catch Exception e
                                          #_(println "No config at" name ":" (.getMessage e))))))]
      (loop [[[source type] & rest] locations]
        (if-let [config (load-fn source type)]
          config
-         (recur rest))))))
+         (if (seq rest)
+           (recur rest)
+           (do
+             (println (str "Found no config for `$BASENAME=" base-name "` in " (keys locations)))
+             {})))))))
 
 
 (defn append-init
