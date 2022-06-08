@@ -7,13 +7,22 @@
             [wrepl.system])
   (:import (clojure.lang DynamicClassLoader)))
 
+(defmacro read-version
+  []
+  (eval
+    '(do
+       (require '[clojure.java.shell])
+       (str/trim (:out (clojure.java.shell/sh "git" "describe" "--always"))))))
+
+(def version (read-version))
+
 (defn- file-exists?
   [file-name]
   (.exists (io/file file-name)))
 
 (defn- usage
   [summary]
-  (str "WREPL\n\nwrepl [options...]\n\n" summary))
+  (str "WREPL " version "\n\nwrepl [options...]\n\n" summary))
 
 (defn- error-message
   [usage errors]
@@ -32,7 +41,8 @@
    ["-i" "--init script.clj" "Run the given file before the first prompt"
     :validate [file-exists? "File must exist"]]
    ["-e" "--eval string" "Evaluate the expression (after --init if both given)"]
-   ["-h" "--help"]])
+   ["-h" "--help"]
+   ["-v" "--version"]])
 
 (defn- merge-config
   [a b]
@@ -45,6 +55,7 @@
   (let [{:keys [options arguments errors summary] :as opts} (cli/parse-opts args cli-options)]
     (cond
       (:help options) (exit 0 (usage summary))
+      (:version options) (exit 0 version)
       errors (exit 1 (error-message (usage summary) errors)))
     ; change to a DynamicClassLoader like the REPL does, or else pomegranate will not be able to find a modifiable CL
     (let [cl (.getContextClassLoader (Thread/currentThread))]
