@@ -2,19 +2,22 @@
   (:require [clojure.java.io :as io]
             [clojure.tools.cli :as cli]
             [clojure.string :as str]
+            [clojure.edn :as edn]
             [wrepl.repl]
             [wrepl.config]
             [wrepl.system])
   (:import (clojure.lang DynamicClassLoader)))
 
-(defmacro read-version
+(defn read-version
   []
-  (eval
-    '(do
-       (require '[clojure.java.shell])
-       (str/trim (:out (clojure.java.shell/sh "git" "describe" "--always"))))))
-
-(def version (read-version))
+  (let [fallback "dev"]
+    (or
+     (some-> "META-INF/leiningen/net.ofnir/wrepl/project.clj"
+             (io/resource)
+             (slurp)
+             (edn/read-string)
+             (nth 2))
+     fallback)))
 
 (defn- file-exists?
   [file-name]
@@ -22,7 +25,7 @@
 
 (defn- usage
   [summary]
-  (str "WREPL " version "\n\nwrepl [options...]\n\n" summary))
+  (str "WREPL " (read-version) "\n\nwrepl [options...]\n\n" summary))
 
 (defn- error-message
   [usage errors]
@@ -55,7 +58,7 @@
   (let [{:keys [options arguments errors summary] :as opts} (cli/parse-opts args cli-options)]
     (cond
       (:help options) (exit 0 (usage summary))
-      (:version options) (exit 0 version)
+      (:version options) (exit 0 (read-version))
       errors (exit 1 (error-message (usage summary) errors)))
     ; change to a DynamicClassLoader like the REPL does, or else pomegranate will not be able to find a modifiable CL
     (let [cl (.getContextClassLoader (Thread/currentThread))]
