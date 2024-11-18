@@ -8,7 +8,7 @@
 
 (defmethod ig/init-key :wrepl.eval/interruptible [_ _]
   (fn wrepl-eval-interruptable [form]
-    (eval 
+    (eval
       `(do
          ~(handle-sigint-form)
          ~form))))

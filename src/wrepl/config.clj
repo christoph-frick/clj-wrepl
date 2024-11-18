@@ -1,7 +1,6 @@
 (ns wrepl.config
   (:require [integrant.core :as ig]
             [clojure.java.io :as io]
-            [clojure.string :as str]
             [wrepl.replacement :as r]))
 
 
@@ -52,7 +51,7 @@
                                        (let [config (load-config type source)]
                                          (println "User config from" (str (name type) "://" source))
                                          config)
-                                       (catch Exception e
+                                       (catch Exception _e
                                          #_(println "No config at" name ":" (.getMessage e))))))]
      (loop [[[source type] & rest] locations]
        (if-let [config (load-fn source type)]

@@ -4,7 +4,7 @@
             [clojure.main]))
 
 
-(defmethod ig/init-key :wrepl.init/in-ns [_ {ns :ns :as opts}]
+(defmethod ig/init-key :wrepl.init/in-ns [_ {ns :ns :as _opts}]
   (fn wrepl-init []
     (in-ns ns)
     (clojure.core/use 'clojure.core)
@@ -12,12 +12,12 @@
     ns))
 
 
-(defmethod ig/init-key :wrepl.init/load-file [_ {filename :filename :as opts}]
+(defmethod ig/init-key :wrepl.init/load-file [_ {filename :filename :as _opts}]
   (fn wrepl-load-file []
     (load-file (r/replace-all r/default-path-replacements filename))))
 
 
-(defmethod ig/init-key :wrepl.init/eval [_ {expr :expr :as opts}]
+(defmethod ig/init-key :wrepl.init/eval [_ {expr :expr :as _opts}]
   (fn wrepl-eval []
     (let [sexp (read-string expr)]
       (print "; ")

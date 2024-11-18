@@ -1,0 +1,11 @@
+{:aliases {:wrepl
+           {:main-opts ["--main" "wrepl.main"]
+            :deps {net.ofnir/wrepl {:mvn/version "0.2.0-SNAPSHOT"}
+                   net.ofnir/wrepl.puget {:mvn/version "0.1.1"}
+                   net.ofnir/wrepl.rebel-readline {:mvn/version "0.1.1"}}}
+           :rest-repl
+           {:main-opts ["--main" "wrepl.main"]
+            :deps {net.ofnir/wrepl {:mvn/version "0.2.0-SNAPSHOT"}
+                   net.ofnir/wrepl.puget {:mvn/version "0.1.1"}
+                   net.ofnir/wrepl.rebel-readline {:mvn/version "0.1.1"}
+                   net.ofnir/wrepl.relative-clj-http {:mvn/version "0.1.1"}}}}}

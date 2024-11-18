@@ -5,8 +5,7 @@
             [clojure.edn :as edn]
             [wrepl.repl]
             [wrepl.config]
-            [wrepl.system])
-  (:import (clojure.lang DynamicClassLoader)))
+            [wrepl.system]))
 
 (defn read-version
   []
@@ -55,14 +54,11 @@
 
 (defn main
   [args]
-  (let [{:keys [options arguments errors summary] :as opts} (cli/parse-opts args cli-options)]
+  (let [{:keys [options errors summary] :as _opts} (cli/parse-opts args cli-options)]
     (cond
       (:help options) (exit 0 (usage summary))
       (:version options) (exit 0 (read-version))
       errors (exit 1 (error-message (usage summary) errors)))
-    ; change to a DynamicClassLoader like the REPL does, or else pomegranate will not be able to find a modifiable CL
-    (let [cl (.getContextClassLoader (Thread/currentThread))]
-      (.setContextClassLoader (Thread/currentThread) (DynamicClassLoader. cl)))
     (let [base-name (or (:base-name options) wrepl.config/*base-name*)]
       (binding [wrepl.config/*base-name* base-name]
         (let [config (cond-> wrepl.config/default-config
