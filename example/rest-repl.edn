@@ -1,8 +1,9 @@
-{; needed for auto-loading the namespaces with integrant
+{[:wrepl/append-init :wrepl/init] [#ig/ref :wrepl.relative-clj-http/init]
+
+ ; needed for auto-loading the namespaces with integrant
  :wrepl.relative-clj-http/init {}
  :wrepl.relative-clj-http/prompt {}
 
- [:wrepl/append-init :wrepl/init] [#ig/ref :wrepl.relative-clj-http/init] 
 
  :wrepl/repl #ig/ref :wrepl.rebel-readline/repl
  :wrepl.rebel-readline/repl {:prompt #ig/ref :wrepl.relative-clj-http/prompt}

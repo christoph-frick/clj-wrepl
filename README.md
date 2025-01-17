@@ -1,49 +1,37 @@
-# WREPL
+# WREPL - Configure the REPL with Integrant
 
-Starting the *Clojure REPL* in a customizable fashion.  The goal is to
-make it easer to write "prepped" REPLs.
+Run a REPL where all "letters" allow for dependency injection.  This
+allows easier mixing and matching components you want to have in your
+REPL.  E.g. use rebel-readline, but use your own pretty-printer; or
+write your own specialized prompts like "REST-REPL", to talk to the web
+(see examples).
 
-
-## Motivation
-
-Before the Clojure CLI tools where released, I found myself often in the
-need outside of project to be able to fire up a REPL (e.g. to answer an
-Stack-Overflow question).  That was very east before the days of
-`clojure.spec`, which then needed multiple JARs to be present.
-
-I ended up doing some pre-packaged JARs for different use-cases (e.g.
-a "comfort" REPL with things like `specter` in it, one for `incanter`, one
-for interactive exploration of web API
-([`rest-repl`](https://github.com/christoph-frick/rest-repl)).  But in the
-end it became cat herding.
-
-So this project aims to fix my problems:
-
-- provide a modular setup for (differently named) REPLs to run outside
-  of projects
-- put features for the REPL in dedicated plugins
-
-Is it still relevant?  All this work started long before (even in
-public) the Clojure CLI tools where released.  I think many of the
-features here are superseded now, yet I never came around to make the
-REST-REPL scenario work and I think `clj` is focused more around the
-project setup and not so much to get a "prepped" REPL (e.g. override
-multiple different things around the REPL).
+**Note:** Since version 0.2 this integrates now with the Clojure CLI
+tools; if you are interested in the stand-alone version, use the `0.1.X`
+branch.
 
 
-## Run
+## Examples
 
-Download [a
-release](https://github.com/christoph-frick/clj-wrepl/releases) or
-checkout this repository and build the *uberjar* (`lein uberjar`).
+Check the [example](./example) folder.
 
-```shell
-% alias wrepl="java -jar target/wrepl-*-standalone.jar"
-% wrepl --help
-WREPL
+- `deps.edn` : Clojure CLI configuration with two aliases.  You can put the aliases in your `~/.config/clojure/deps.edn` file.
+- `wrepl` : Run a WREPL with rebel-readline and puget pretty-printing
+  with the colors configured
+- `wrepl.edn` : Configuration for the above; you can put this file at
+  `~/.wrepl/wrepl.edn`.
+- `rest-repl` : Same like above, but runs REST-REPL; note the `-b
+  rest-repl` arguments, to give the configuration a different base-name,
+  so different things may be configured.
+- `rest-repl.edn` : Configuration for the above; you can put this file
+  at `~/.wrepl/rest-repl.edn`
 
-wrepl [options...]
 
+## Options
+
+The main from WREPL has the following options:
+
+ ```
   -b, --base-name base-name  Base name for the user config to search for; e.g. $HOME/.wrepl/$BASENAME.edn (default: wrepl)
   -c, --config config.edn    Read the integrant system config from this file and merge it with the default
       --no-user-config       Don't load the default user config
@@ -52,35 +40,14 @@ wrepl [options...]
   -h, --help
 ```
 
-Without a config some basic REPL is started.  A simple config to add
-rebel-readline and puget can look like this (e.g. in
-`~/.wrepl/wrepl.edn`; `wrepl` is the default base-name):
-
-```clojure
-{:wrepl/deps {:coordinates [[net.ofnir/wrepl.puget "0.1.0"]
-                            [net.ofnir/wrepl.rebel-readline "0.1.0"]]}
- :wrepl/repl #ig/ref :wrepl.rebel-readline/repl
- :wrepl/print #ig/ref :wrepl.puget/print
- :wrepl.puget/print {:seq-limit 20
-                     :color-scheme {:delimiter [:red]
-                                    :string nil
-                                    :character nil
-                                    :keyword [:yellow]
-                                    :symbol [:magenta]
-                                    :function-symbol [:bold :magenta]
-                                    :class-delimiter [:magenta]
-                                    :class-name [:bold :magenta]}}
- :wrepl.rebel-readline/repl {}}
-```
-
 ## Configuration
 
 Configuration is done with an `EDN` file, that
-[`immutant`](https://github.com/weavejester/integrant) will read.  So an
+[`immutant`](https://github.com/weavejester/integrant) will read.  So a
 basic understanding of that syntax is helpful.
 
-By default the WREPL uberjar will try to attempt to find and load the
-files or resources in the following order:
+By default, WREPL will attempt to find and load the files or resources
+in the following order:
 
 - File: `".$BASENAME.edn"`
 - File: `".wrepl/$BASENAME.edn"`
@@ -90,6 +57,7 @@ files or resources in the following order:
 
 Where `$BASENAME` is the configured base name given as an argument, or
 the default, `wrepl`.
+
 
 ### Entry points
 
@@ -113,6 +81,7 @@ example of the `clojure.main/repl`:
 - `:wrepl/print`: Function to print the result of the evaluation;
   defaults to whatever the REPL provides
 
+
 ### Default expansion points
 
 There are already some "plugins" the wrepl comes pre-packaged:
@@ -125,7 +94,8 @@ There are already some "plugins" the wrepl comes pre-packaged:
 - `:wrepl.init/eval {:expr "(+ 1 2 3)"}`: Reads the string `:expr`,
   evaluates it, and prints the result
 - `:wrepl.eval/interruptible`: `eval`, that allows `CTRL-C` of the
-  current running evaluation (used as default
+  current running evaluation (used as default)
+
 
 ### Replacements
 
@@ -134,29 +104,9 @@ replacements are available inside strings:
 
 - `$HOME`: What Java considers the user home (the property `user.home`)
 
-### Adding plugins
-
-The entry point `:wrepl/deps` is a special case, that does not take
-part in the `integrant` setup, but is used before to load additional
-plugins, which then can be used inside the configuration.
-
-`:wrepl/deps` uses
-[`pomegranate`](https://github.com/cemerick/pomegranate_ internally and
-uses the same configuration syntax.  E.g.
-
-```clojure
-:wrepl/deps {:coordinates [[net.ofnir/wrepl.puget "0.1.0"]
-                           [net.ofnir/wrepl.rebel-readline "0.1.0"]
-                           [net.ofnir/wrepl.pomegranate "0.1.0"]]
-             ; this is the default and does not need to be added:
-             :repositories {"clojars" "https://clojars.org/repo"
-                            "jcenter" "https://jcenter.bintray.com"}}
-```
-
 
 ## Known plugins
 
-- [clj-wrepl-pomegranate](https://github.com/christoph-frick/clj-wrepl-pomegranate) Load dependencies
 - [clj-wrepl-puget](https://github.com/christoph-frick/clj-wrepl-puget) Color pretty print
 - [clj-wrepl-rebel-readline](https://github.com/christoph-frick/clj-wrepl-rebel-readline) Rebel Readline
 - [clj-wrepl-relative-clj-http](https://github.com/christoph-frick/clj-wrepl-relative-clj-http) Exploring web APIs interactively

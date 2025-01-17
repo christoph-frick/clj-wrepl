@@ -70,7 +70,6 @@
       (update :wrepl/init (fnil conj []) (ig/ref key))))
 
 
-(defmethod ig/init-key :wrepl/deps [_ f] f) ; this does not actually take part in integrant
 (defmethod ig/init-key :wrepl/repl [_ f] f)
 (defmethod ig/init-key :wrepl/init [_ fs]
   (fn init []
