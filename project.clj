@@ -1,4 +1,4 @@
-(defproject net.ofnir/wrepl "0.2.0"
+(defproject net.ofnir/wrepl "0.2.1-SNAPSHOT"
   :description "Configuration of all the turning parts of a REPL using integrant"
   :url "https://github.com/christoph-frick/clj-wrepl"
   :license {:name "The MIT License"
