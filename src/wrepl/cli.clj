@@ -39,6 +39,7 @@
   [["-b" "--base-name base-name" "Base name for the user config to search for; e.g. $HOME/.wrepl/$BASENAME.edn (default: wrepl)"]
    ["-c" "--config config.edn" "Read the integrant system config from this file and merge it with the default"
     :validate [file-exists? "File must exist"]]
+   [nil "--no-default-config" (str "Don't load the default config")]
    [nil "--no-user-config" (str "Don't load the default user config")]
    ["-i" "--init script.clj" "Run the given file before the first prompt"
     :validate [file-exists? "File must exist"]]
@@ -61,7 +62,10 @@
       errors (exit 1 (error-message (usage summary) errors)))
     (let [base-name (or (:base-name options) wrepl.config/*base-name*)]
       (binding [wrepl.config/*base-name* base-name]
-        (let [config (cond-> wrepl.config/default-config
+        (let [config (cond-> {}
+                       ; load the default config unless prohibited
+                       (not (contains? options :no-default-config))
+                       (merge-config wrepl.config/default-config )
                        ; load default user config unless prohibited
                        (not (contains? options :no-user-config))
                        (merge-config (wrepl.config/load-user-config))
